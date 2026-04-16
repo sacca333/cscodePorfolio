@@ -1,0 +1,387 @@
+// ==========================================================
+//  SCHÉMA PRISMA – Portfolio Charles Sacca
+//  Stack : PostgreSQL + Prisma ORM
+//  Généré pour Next.js App Router
+// ==========================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================================
+//  AUTHENTIFICATION ADMIN
+// ==========================================================
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // Hashé avec bcrypt
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  sessions  Session[]
+  logs      ActivityLog[]
+
+  @@map("admins")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique @default(cuid())
+  adminId   String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([adminId])
+  @@map("sessions")
+}
+
+// ==========================================================
+//  PROJETS
+// ==========================================================
+
+model Project {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  title       String
+  subtitle    String?
+  description String        // Court résumé (carte)
+  content     String?       // Description longue (page détail)
+  status      ProjectStatus @default(DRAFT)
+  featured    Boolean       @default(false)
+  order       Int           @default(0)  // Pour le tri manuel
+  thumbnail   String?       // URL image principale
+  images      String[]      // URLs screenshots additionnels
+  demoUrl     String?
+  githubUrl   String?
+  caseStudyUrl String?
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relations
+  technologies ProjectTechnology[]
+  categories   ProjectCategory[]
+
+  @@index([status])
+  @@index([featured])
+  @@index([order])
+  @@map("projects")
+}
+
+enum ProjectStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Technology {
+  id       String  @id @default(cuid())
+  name     String  @unique
+  icon     String? // Nom de l'icône ou URL SVG
+  category TechCategory @default(OTHER)
+
+  // Relations
+  projects    ProjectTechnology[]
+  skillItems  SkillItem[]
+
+  @@map("technologies")
+}
+
+enum TechCategory {
+  FRONTEND
+  BACKEND
+  DATABASE
+  DEVOPS
+  TOOL
+  OTHER
+}
+
+// Table de jointure Projet <-> Technologie
+model ProjectTechnology {
+  projectId    String
+  technologyId String
+
+  project    Project    @relation(fields: [projectId],    references: [id], onDelete: Cascade)
+  technology Technology @relation(fields: [technologyId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, technologyId])
+  @@map("project_technologies")
+}
+
+model Category {
+  id    String @id @default(cuid())
+  name  String @unique
+  slug  String @unique
+
+  // Relations
+  projects ProjectCategory[]
+  articles Article[]
+
+  @@map("categories")
+}
+
+// Table de jointure Projet <-> Catégorie
+model ProjectCategory {
+  projectId  String
+  categoryId String
+
+  project  Project  @relation(fields: [projectId],  references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, categoryId])
+  @@map("project_categories")
+}
+
+// ==========================================================
+//  COMPÉTENCES
+// ==========================================================
+
+model SkillGroup {
+  id    String       @id @default(cuid())
+  name  String       @unique // "Frontend", "Backend", "DevOps"...
+  icon  String?
+  order Int          @default(0)
+  color String?      // Couleur d'accentuation hex
+
+  // Relations
+  items SkillItem[]
+
+  @@index([order])
+  @@map("skill_groups")
+}
+
+model SkillItem {
+  id           String     @id @default(cuid())
+  name         String
+  level        SkillLevel @default(INTERMEDIATE)
+  order        Int        @default(0)
+  yearsOfExp   Int?       // Années d'expérience
+  highlighted  Boolean    @default(false) // Mise en avant sur la page
+  groupId      String
+  technologyId String?    // Lien optionnel vers Technology
+
+  group      SkillGroup  @relation(fields: [groupId],      references: [id], onDelete: Cascade)
+  technology Technology? @relation(fields: [technologyId], references: [id], onDelete: SetNull)
+
+  @@index([groupId])
+  @@index([order])
+  @@map("skill_items")
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+// ==========================================================
+//  EXPÉRIENCES / CV
+// ==========================================================
+
+model Experience {
+  id          String         @id @default(cuid())
+  role        String         // Intitulé du poste
+  company     String
+  location    String?
+  type        ExperienceType @default(FULLTIME)
+  description String         // Résumé court
+  missions    String[]       // Liste des missions accomplies
+  startDate   DateTime
+  endDate     DateTime?      // Null = poste actuel
+  current     Boolean        @default(false)
+  order       Int            @default(0)
+  techStack   String[]       // Tags tech (simples strings)
+  companyUrl  String?
+
+  @@index([current])
+  @@index([order])
+  @@map("experiences")
+}
+
+enum ExperienceType {
+  FULLTIME
+  PARTTIME
+  FREELANCE
+  INTERNSHIP
+  OPENSOURCE
+}
+
+model Education {
+  id          String   @id @default(cuid())
+  degree      String   // "Licence Informatique"
+  institution String
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  current     Boolean  @default(false)
+  description String?
+  order       Int      @default(0)
+
+  @@index([order])
+  @@map("education")
+}
+
+// ==========================================================
+//  MESSAGES DE CONTACT
+// ==========================================================
+
+model ContactMessage {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    MessageStatus @default(UNREAD)
+  ip        String?       // Pour anti-spam
+  userAgent String?
+  repliedAt DateTime?
+  archivedAt DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("contact_messages")
+}
+
+enum MessageStatus {
+  UNREAD
+  READ
+  REPLIED
+  ARCHIVED
+  SPAM
+}
+
+// ==========================================================
+//  BLOG / ARTICLES (optionnel)
+// ==========================================================
+
+model Article {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  title       String
+  excerpt     String        // Résumé court (SEO + liste)
+  content     String        // Markdown ou HTML
+  coverImage  String?
+  status      ArticleStatus @default(DRAFT)
+  featured    Boolean       @default(false)
+  readingTime Int?          // Estimé en minutes (calculé)
+  views       Int           @default(0)
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  categoryId  String?
+
+  // Relations
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags     ArticleTag[]
+
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+
+  @@index([status])
+  @@index([featured])
+  @@index([publishedAt])
+  @@map("articles")
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Tag {
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique
+
+  articles ArticleTag[]
+
+  @@map("tags")
+}
+
+// Table de jointure Article <-> Tag
+model ArticleTag {
+  articleId String
+  tagId     String
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId],     references: [id], onDelete: Cascade)
+
+  @@id([articleId, tagId])
+  @@map("article_tags")
+}
+
+// ==========================================================
+//  PARAMÈTRES DU SITE
+// ==========================================================
+
+model SiteSettings {
+  id               String  @id @default(cuid())
+
+  // Identité
+  siteTitle        String  @default("Charles Sacca – Développeur Full-Stack")
+  siteTagline      String  @default("Création d'applications web performantes et modernes")
+  siteDescription  String  @default("Portfolio de Charles Sacca, développeur web full-stack basé au Bénin.")
+  siteUrl          String  @default("https://charlessacca.dev")
+
+  // Profil
+  fullName         String  @default("Charles Sacca")
+  bio              String?
+  avatarUrl        String?
+  cvUrl            String? // URL vers le PDF du CV
+  location         String  @default("Cotonou, Bénin")
+  email            String  @default("contact@charlessacca.dev")
+  phone            String?
+  available        Boolean @default(true) // Badge "disponible"
+
+  // Réseaux sociaux
+  githubUrl        String?
+  linkedinUrl      String?
+  twitterUrl       String?
+  youtubeUrl       String?
+
+  // SEO
+  ogImageUrl       String?
+  googleAnalyticsId String?
+
+  // Timestamps
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// ==========================================================
+//  LOGS D'ACTIVITÉ (dashboard admin)
+// ==========================================================
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  action    String   // ex: "PROJECT_PUBLISHED", "MESSAGE_READ"
+  entity    String?  // ex: "Project", "ContactMessage"
+  entityId  String?  // ID de l'entité concernée
+  details   String?  // JSON sérialisé pour infos supplémentaires
+  adminId   String
+  createdAt DateTime @default(now())
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([createdAt])
+  @@map("activity_logs")
+}
