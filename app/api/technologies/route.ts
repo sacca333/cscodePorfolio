@@ -2,8 +2,8 @@
 //  app/api/technologies/route.ts
 // ==========================================================
 
-import { NextResponse }    from 'next/server'
-import { prisma }          from '@/lib/prisma'
+import { NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
 
 export async function GET() {
   const technologies = await prisma.technology.findMany({
@@ -63,9 +63,9 @@ export async function GET_experiences() {
 //  PATCH /api/settings → mettre à jour (admin)
 // ==========================================================
 
-import { NextRequest }   from 'next/server'
+import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions }   from '@/lib/auth'
+import { authOptions } from '@/lib/auth'
 import { settingsSchema, formatZodErrors } from '@/lib/validators'
 
 export async function GET_settings() {
@@ -77,7 +77,7 @@ export async function PATCH_settings(req: NextRequest) {
   const session = await getServerSession(authOptions)
   if (!session?.user) return NextResponse.json({ error: 'Non autorisé.' }, { status: 401 })
 
-  const body   = await req.json()
+  const body = await req.json()
   const parsed = settingsSchema.safeParse(body)
 
   if (!parsed.success) {

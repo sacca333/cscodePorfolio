@@ -7,9 +7,9 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 export default function PublicNav() {
-  const [scrolled, setScrolled]   = useState(false)
-  const [menuOpen, setMenuOpen]   = useState(false)
-  const [active,   setActive]     = useState('')
+  const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [active, setActive] = useState('')
 
   useEffect(() => {
     const onScroll = () => {
@@ -27,11 +27,11 @@ export default function PublicNav() {
   }, [])
 
   const links = [
-    { href: '#apropos',     label: 'À propos'    },
+    { href: '#apropos', label: 'À propos' },
     { href: '#competences', label: 'Compétences' },
-    { href: '#projets',     label: 'Projets'     },
-    { href: '#experience',  label: 'Expérience'  },
-    { href: '#contact',     label: 'Contact'     },
+    { href: '#projets', label: 'Projets' },
+    { href: '#experience', label: 'Expérience' },
+    { href: '#contact', label: 'Contact' },
   ]
 
   return (
@@ -46,7 +46,7 @@ export default function PublicNav() {
         transition: 'padding .3s ease',
       }}>
         <a href="#accueil" style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.15rem', letterSpacing: '-0.02em', color: 'var(--text)', textDecoration: 'none' }}>
-          CS<span style={{ color: 'var(--accent)' }}>.</span>
+          {'<cscode/>'}<span style={{ color: 'var(--accent)' }}></span>
         </a>
 
         <ul style={{ display: 'flex', gap: '2rem', listStyle: 'none' }}>
