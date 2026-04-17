@@ -410,7 +410,7 @@ export default async function HomePage() {
           {[
             { label: 'GitHub', href: githubUrl },
             { label: 'LinkedIn', href: linkedinUrl },
-            { label: 'Admin', href: '/admin' },
+            { label: 'Admin', href: '/admin/login' },
           ].map(l => (
             <a key={l.href} href={l.href} style={{ color: 'var(--muted)', textDecoration: 'none', fontSize: '.85rem' }}>{l.label}</a>
           ))}
