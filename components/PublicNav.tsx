@@ -46,7 +46,7 @@ export default function PublicNav() {
         transition: 'padding .3s ease',
       }}>
         <a href="#accueil" style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.15rem', letterSpacing: '-0.02em', color: 'var(--text)', textDecoration: 'none' }}>
-          {'<cscode/>'}<span style={{ color: 'var(--accent)' }}></span>
+          {'&lt;cscode/&gt;'}<span style={{ color: 'var(--accent)' }}></span>
         </a>
 
         <ul style={{ display: 'flex', gap: '2rem', listStyle: 'none' }}>
