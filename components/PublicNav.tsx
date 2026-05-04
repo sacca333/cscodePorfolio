@@ -4,11 +4,9 @@
 // ==========================================================
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 
 export default function PublicNav() {
   const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
   const [active, setActive] = useState('')
 
   useEffect(() => {
@@ -42,11 +40,16 @@ export default function PublicNav() {
         padding: scrolled ? '.875rem 4rem' : '1.25rem 4rem',
         backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
         borderBottom: `1px solid ${scrolled ? 'var(--border-2)' : 'var(--border)'}`,
-        background: 'rgba(10,10,15,0.82)',
-        transition: 'padding .3s ease',
+        background: scrolled ? 'rgba(250,250,248,0.92)' : 'rgba(250,250,248,0.75)',
+        transition: 'padding .3s ease, background .3s ease',
       }}>
-        <a href="#accueil" style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.15rem', letterSpacing: '-0.02em', color: 'var(--text)', textDecoration: 'none' }}>
-          {'&lt;cscode/&gt;'}<span style={{ color: 'var(--accent)' }}></span>
+
+        <a href="#accueil" style={{
+          fontFamily: 'var(--font-display)', fontWeight: 800,
+          fontSize: '1.15rem', letterSpacing: '-0.02em',
+          color: 'var(--text)', textDecoration: 'none',
+        }}>
+          {'<cscode/>'}
         </a>
 
         <ul style={{ display: 'flex', gap: '2rem', listStyle: 'none' }}>
@@ -59,7 +62,10 @@ export default function PublicNav() {
               }}>
                 {l.label}
                 {active === l.href.slice(1) && (
-                  <span style={{ position: 'absolute', bottom: -4, left: 0, right: 0, height: 1, background: 'var(--accent)', borderRadius: 1 }} />
+                  <span style={{
+                    position: 'absolute', bottom: -4, left: 0, right: 0,
+                    height: 1, background: 'var(--accent)', borderRadius: 1,
+                  }} />
                 )}
               </a>
             </li>
@@ -67,7 +73,7 @@ export default function PublicNav() {
         </ul>
 
         <a href="#contact" style={{
-          background: 'var(--accent)', color: '#0a0a0f',
+          background: 'var(--accent)', color: '#ffffff',
           padding: '.5rem 1.25rem', borderRadius: 'var(--radius-sm)',
           textDecoration: 'none', fontSize: '.85rem', fontWeight: 700,
           fontFamily: 'var(--font-display)',
@@ -76,11 +82,7 @@ export default function PublicNav() {
         </a>
       </nav>
 
-      <style>{`
-        @media (max-width: 768px) {
-          nav ul, nav a:last-child { display: none !important; }
-        }
-      `}</style>
+
     </>
   )
 }

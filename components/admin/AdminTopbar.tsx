@@ -14,17 +14,16 @@ export default function AdminTopbar({ admin }: Props) {
     <header style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       padding: '.875rem 2.5rem',
-      borderBottom: '1px solid rgba(255,255,255,.06)',
-      background: 'rgba(13,13,20,0.85)',
-      backdropFilter: 'blur(12px)',
+      borderBottom: '1px solid var(--admin-border)',
+      background: 'var(--admin-topbar)',
       position: 'sticky', top: 0, zIndex: 50,
       gap: '1rem',
     }}>
       <div>
-        <div style={{ fontSize: '.9rem', color: '#e8e8f0' }}>
-          Bonjour, <strong>{admin?.name ?? 'Admin'}</strong>
+        <div style={{ fontSize: '.9rem', color: 'var(--admin-text)', fontWeight: 400 }}>
+          Bonjour, <strong style={{ fontWeight: 700 }}>{admin?.name ?? 'Admin'}</strong>
         </div>
-        <div style={{ fontSize: '.75rem', color: '#666680', marginTop: '.1rem', textTransform: 'capitalize' }}>
+        <div style={{ fontSize: '.75rem', color: 'var(--admin-muted)', marginTop: '.1rem', textTransform: 'capitalize' }}>
           {new Date().toLocaleDateString('fr-FR', {
             weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
           })}
@@ -32,39 +31,44 @@ export default function AdminTopbar({ admin }: Props) {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem' }}>
+        {/* Bouton voir le site */}
         <Link href="/" target="_blank" style={{
           width: 36, height: 36,
-          background: 'rgba(255,255,255,.04)',
-          border: '1px solid rgba(255,255,255,.07)',
-          borderRadius: 9, color: '#888',
+          background: 'var(--admin-bg)',
+          border: '1px solid var(--admin-border)',
+          borderRadius: 9, color: 'var(--admin-muted)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          textDecoration: 'none', fontSize: '.8rem',
+          textDecoration: 'none', fontSize: '.85rem',
+          transition: 'all .18s',
         }} title="Voir le site">↗</Link>
 
+        {/* Profil admin */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: '.65rem',
           padding: '.4rem .75rem .4rem .4rem',
-          background: 'rgba(255,255,255,.04)',
-          border: '1px solid rgba(255,255,255,.07)',
+          background: 'var(--admin-bg)',
+          border: '1px solid var(--admin-border)',
           borderRadius: 10,
         }}>
           <div style={{
             width: 32, height: 32, borderRadius: 8,
-            background: 'rgba(110,231,183,.15)', color: '#6ee7b7',
+            background: 'var(--admin-accent-l)',
+            color: 'var(--admin-accent)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontWeight: 800, fontSize: '.72rem',
             fontFamily: "'Syne', sans-serif", flexShrink: 0,
           }}>{initials}</div>
           <div>
-            <div style={{ fontSize: '.8rem', fontWeight: 600, color: '#e8e8f0', whiteSpace: 'nowrap' }}>
+            <div style={{ fontSize: '.8rem', fontWeight: 600, color: 'var(--admin-text)', whiteSpace: 'nowrap' }}>
               {admin?.name}
             </div>
-            <div style={{ fontSize: '.7rem', color: '#6ee7b7' }}>Administrateur</div>
+            <div style={{ fontSize: '.7rem', color: 'var(--admin-accent)', fontWeight: 500 }}>Administrateur</div>
           </div>
           <button
             onClick={() => signOut({ callbackUrl: '/admin/login' })}
             style={{
-              background: 'none', border: 'none', color: '#555',
+              background: 'none', border: 'none',
+              color: 'var(--admin-muted)',
               cursor: 'pointer', padding: '.25rem', borderRadius: 6,
               fontSize: '.85rem', transition: 'color .2s', marginLeft: '.25rem',
             }}

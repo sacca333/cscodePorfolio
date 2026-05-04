@@ -13,7 +13,6 @@ export const metadata: Metadata = {
   title: 'Charles Sacca – Développeur web full-stack',
 }
 
-// Chargement des données côté serveur
 async function getPortfolioData() {
   const [projects, skillGroups, experiences, settings] = await Promise.all([
     prisma.project.findMany({
@@ -38,8 +37,7 @@ async function getPortfolioData() {
 export default async function HomePage() {
   const { projects, skillGroups, experiences, settings } = await getPortfolioData()
 
-  const siteTitle = settings?.siteTitle ?? 'Charles Sacca – Développeur web full-stack'
-  const siteTagline = settings?.siteTagline ?? "Création d'applications web performantes et modernes"
+  const siteTagline = settings?.siteTagline ?? "Création d'applications web performantes et modernes adaptées à vos besoins."
   const bio = settings?.bio ?? "Développeur web full-stack avec plus de 4 ans d'expérience, je conçois des solutions numériques robustes pour startups, PME et clients internationaux."
   const available = settings?.available ?? true
   const githubUrl = settings?.githubUrl ?? 'https://github.com/charlessacca'
@@ -50,12 +48,88 @@ export default async function HomePage() {
     <>
       <PublicNav />
 
+      {/* ── RESPONSIVE STYLES ── */}
+      <style>{`
+        .hero-section {
+          min-height: 100vh; display: flex; align-items: center;
+          padding: 8rem 4rem 4rem; position: relative; overflow: hidden;
+        }
+        .hero-content {
+          max-width: 820px; position: relative; z-index: 1; width: 100%;
+          padding-right: clamp(0px, 26vw, 380px);
+        }
+        .hero-avatar {
+          position: absolute; right: 3%; top: 30%; transform: translateY(-30%);
+          width: clamp(160px, 20vw, 320px); height: clamp(160px, 20vw, 320px);
+          z-index: 1; border-radius: 50%; overflow: hidden;
+          border: 3px solid rgba(110,231,183,.3);
+          box-shadow: 0 0 40px rgba(110,231,183,.08);
+        }
+        .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 4rem; }
+        .hero-stats {
+          display: flex; gap: 3.5rem; padding-top: 3rem;
+          border-top: 1px solid var(--border); flex-wrap: wrap;
+        }
+        .about-section {
+          padding: 6rem 4rem;
+          background: var(--bg-2);
+          border-top: 1px solid var(--border);
+          border-bottom: 1px solid var(--border);
+        }
+        .about-grid {
+          display: grid; grid-template-columns: 280px 1fr;
+          gap: 4rem; margin-top: 2rem;
+        }
+        .skills-section { padding: 6rem 4rem; }
+        .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .projects-section { padding: 0 4rem 6rem; }
+        .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .experience-section {
+          padding: 6rem 4rem;
+          background: var(--bg-2);
+          border-top: 1px solid var(--border);
+        }
+        .exp-card {
+          display: grid; grid-template-columns: 160px 1fr; gap: 2.5rem;
+          padding: 1.5rem 1.75rem; background: var(--card);
+          border: 1px solid var(--border); border-radius: var(--radius-lg);
+        }
+        .contact-section { padding: 6rem 4rem; }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 4rem; }
+        .site-footer {
+          padding: 2rem 4rem; border-top: 1px solid var(--border);
+          display: flex; justify-content: space-between;
+          align-items: center; gap: 1rem; flex-wrap: wrap;
+        }
+
+        @media (max-width: 1024px) {
+          .skills-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+          .hero-section { padding: 7rem 1.5rem 3rem; min-height: auto; }
+          .hero-content { padding-right: 0; }
+          .hero-avatar { display: none; }
+          .about-section { padding: 4rem 1.5rem; }
+          .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+          .skills-section { padding: 4rem 1.5rem; }
+          .projects-section { padding: 0 1.5rem 4rem; }
+          .projects-grid { grid-template-columns: 1fr; }
+          .experience-section { padding: 4rem 1.5rem; }
+          .exp-card { grid-template-columns: 1fr; gap: 0.5rem; }
+          .contact-section { padding: 4rem 1.5rem; }
+          .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+          .site-footer { padding: 2rem 1.5rem; }
+        }
+
+        @media (max-width: 480px) {
+          .skills-grid { grid-template-columns: 1fr; }
+          .hero-stats { gap: 2rem; }
+        }
+      `}</style>
+
       {/* ── HERO ── */}
-      <section id="accueil" style={{
-        minHeight: '100vh', display: 'flex', alignItems: 'center',
-        padding: '8rem 4rem 4rem', position: 'relative', overflow: 'hidden',
-      }}>
-        {/* Orbs décoratifs */}
+      <section id="accueil" className="hero-section">
         <div style={{ position: 'absolute', top: -200, right: -150, width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(110,231,183,.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: -100, left: -100, width: 450, height: 450, borderRadius: '50%', background: 'radial-gradient(circle, rgba(59,130,246,.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{
@@ -64,31 +138,18 @@ export default async function HomePage() {
           backgroundSize: '60px 60px',
           maskImage: 'radial-gradient(ellipse 60% 80% at 50% 50%, black 0%, transparent 100%)',
         }} />
+
         {settings?.avatarUrl && (
-          <div style={{
-            position: 'absolute', right: '6%', top: '30%',
-            transform: 'translateY(-30%)',
-            width: 'clamp(200px, 20vw, 320px)',
-            height: 'clamp(200px, 20vw, 320px)',
-            zIndex: 1,
-            borderRadius: '50%',
-            overflow: 'hidden',
-            border: '3px solid rgba(110,231,183,.3)',
-            boxShadow: '0 0 40px rgba(110,231,183,.08)',
-          }}>
+          <div className="hero-avatar">
             <img
               src={settings.avatarUrl}
               alt="Charles Sacca"
-              style={{
-                width: '100%', height: '100%',
-                objectFit: 'cover', objectPosition: 'center top',
-              }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
             />
           </div>
         )}
 
-
-        <div style={{ maxWidth: 820, position: 'relative', zIndex: 1 }}>
+        <div className="hero-content">
           {available && (
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '.5rem',
@@ -104,19 +165,19 @@ export default async function HomePage() {
 
           <h1 style={{
             fontFamily: 'var(--font-display)', fontWeight: 800,
-            fontSize: 'clamp(3rem, 5.2vw, 5.5rem)', lineHeight: 1.04,
+            fontSize: 'clamp(2rem, 4.2vw, 5.5rem)', lineHeight: 1.04,
             letterSpacing: '-0.04em', marginBottom: '1.5rem',
           }}>
             <span>{settings?.fullName ?? 'Charles Sacca'}</span><br />
-            <span style={{ color: 'var(--muted)', fontWeight: 400, fontSize: 'clamp(2.5rem, 3vw, 3rem)' }}>Développeur web </span>
-            <span style={{ color: 'var(--accent)', fontSize: 'clamp(2.5rem, 3vw, 3rem)' }}>full&#8209;stack</span>
+            <span style={{ color: 'var(--muted)', fontWeight: 400, fontSize: 'clamp(2.5rem, 4vw, 4rem)' }}>Développeur web </span>
+            <span style={{ color: 'var(--accent)', fontSize: 'clamp(2.5rem, 8vw, 6rem)' }}>full&#8209;stack</span>
           </h1>
 
-          <p style={{ fontSize: '1.1rem', color: 'var(--muted)', maxWidth: 540, marginBottom: '2.5rem', fontWeight: 300, lineHeight: 1.8 }}>
+          <p style={{ fontSize: '1.05rem', color: 'var(--muted)', marginBottom: '2.5rem', fontWeight: 300, lineHeight: 1.8 }}>
             {siteTagline}
           </p>
 
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '4rem' }}>
+          <div className="hero-buttons">
             <a href="#projets" style={{
               display: 'inline-flex', alignItems: 'center', gap: '.5rem',
               background: 'var(--accent)', color: '#0a0a0f',
@@ -146,9 +207,9 @@ export default async function HomePage() {
             )}
           </div>
 
-          <div style={{ display: 'flex', gap: '3.5rem', paddingTop: '3rem', borderTop: '1px solid var(--border)' }}>
+          <div className="hero-stats">
             {[
-              { num: '4+', label: "Années d'expérience" },
+              { num: '2+', label: "Années d'expérience" },
               { num: `${projects.length}+`, label: 'Projets livrés' },
               { num: '10+', label: 'Technologies maîtrisées' },
             ].map(s => (
@@ -159,17 +220,16 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
-
       </section>
 
       {/* ── À PROPOS ── */}
-      <section id="apropos" style={{ padding: '6rem 4rem', background: 'var(--bg-2)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+      <section id="apropos" className="about-section">
         <span style={{ display: 'inline-block', fontSize: '.7rem', fontWeight: 600, letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '.75rem' }}>À propos</span>
         <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', letterSpacing: '-0.02em', marginBottom: '1rem' }}>
           Un développeur passionné<br />basé au Bénin
         </h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '4rem', marginTop: '2rem' }}>
+        <div className="about-grid">
           <div>
             <div style={{
               width: 120, height: 120, borderRadius: 'var(--radius-xl)',
@@ -177,7 +237,7 @@ export default async function HomePage() {
               border: '1px solid rgba(110,231,183,.2)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '2rem', color: 'var(--accent)',
-              marginBottom: '1.5rem',
+              marginBottom: '1.5rem', overflow: 'hidden',
             }}>
               {settings?.avatarUrl
                 ? <img src={settings.avatarUrl} alt="Charles Sacca" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', borderRadius: 'inherit' }} />
@@ -220,11 +280,11 @@ export default async function HomePage() {
       </section>
 
       {/* ── COMPÉTENCES ── */}
-      <section id="competences" style={{ padding: '6rem 4rem' }}>
+      <section id="competences" className="skills-section">
         <span style={{ display: 'inline-block', fontSize: '.7rem', fontWeight: 600, letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '.75rem' }}>Stack technique</span>
         <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', letterSpacing: '-0.02em', marginBottom: '3rem' }}>Compétences</h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+        <div className="skills-grid">
           {skillGroups.map(group => (
             <div key={group.id} style={{
               background: 'var(--card)', border: '1px solid var(--border)',
@@ -258,11 +318,11 @@ export default async function HomePage() {
       </section>
 
       {/* ── PROJETS ── */}
-      <section id="projets" style={{ padding: '0 4rem 6rem' }}>
+      <section id="projets" className="projects-section">
         <span style={{ display: 'inline-block', fontSize: '.7rem', fontWeight: 600, letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '.75rem' }}>Réalisations</span>
         <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', letterSpacing: '-0.02em', marginBottom: '3rem' }}>Projets récents</h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.5rem' }}>
+        <div className="projects-grid">
           {projects.map((project, i) => (
             <article key={project.id} style={{
               background: 'var(--card)', border: '1px solid var(--border)',
@@ -316,17 +376,13 @@ export default async function HomePage() {
       </section>
 
       {/* ── EXPÉRIENCES ── */}
-      <section id="experience" style={{ padding: '0 4rem 6rem', background: 'var(--bg-2)', borderTop: '1px solid var(--border)', paddingTop: '6rem' }}>
+      <section id="experience" className="experience-section">
         <span style={{ display: 'inline-block', fontSize: '.7rem', fontWeight: 600, letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '.75rem' }}>Parcours</span>
         <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', letterSpacing: '-0.02em', marginBottom: '3rem' }}>Expériences professionnelles</h2>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           {experiences.map(exp => (
-            <div key={exp.id} style={{
-              display: 'grid', gridTemplateColumns: '160px 1fr', gap: '2.5rem',
-              padding: '1.5rem 1.75rem', background: 'var(--card)',
-              border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)',
-            }}>
+            <div key={exp.id} className="exp-card">
               <div>
                 <div style={{ fontSize: '.8rem', color: 'var(--muted)', paddingTop: '.3rem' }}>
                   {new Date(exp.startDate).getFullYear()} – {exp.current ? 'Présent' : exp.endDate ? new Date(exp.endDate).getFullYear() : ''}
@@ -361,11 +417,11 @@ export default async function HomePage() {
       </section>
 
       {/* ── CONTACT ── */}
-      <section id="contact" style={{ padding: '6rem 4rem' }}>
+      <section id="contact" className="contact-section">
         <span style={{ display: 'inline-block', fontSize: '.7rem', fontWeight: 600, letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '.75rem' }}>Contact</span>
         <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', letterSpacing: '-0.02em', marginBottom: '3rem' }}>Travaillons ensemble</h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '4rem' }}>
+        <div className="contact-grid">
           <div>
             <p style={{ color: 'var(--muted)', fontWeight: 300, fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '2rem' }}>
               Disponible pour des projets freelance, des collaborations ou des postes en CDI/CDD.
@@ -399,14 +455,11 @@ export default async function HomePage() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer style={{
-        padding: '2rem 4rem', borderTop: '1px solid var(--border)',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem',
-      }}>
+      <footer className="site-footer">
         <div style={{ color: 'var(--muted)', fontSize: '.85rem' }}>
           © {new Date().getFullYear()} Charles Sacca – Tous droits réservés
         </div>
-        <div style={{ display: 'flex', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
           {[
             { label: 'GitHub', href: githubUrl },
             { label: 'LinkedIn', href: linkedinUrl },

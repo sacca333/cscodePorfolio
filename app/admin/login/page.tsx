@@ -32,32 +32,32 @@ export default function LoginPage() {
 
   return (
     <div style={{
-      minHeight: '100vh', background: '#0a0a0f',
+      minHeight: '100vh', background: '#FAFAF8',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       padding: '2rem', fontFamily: "'DM Sans', sans-serif",
-      color: '#e8e8f0', position: 'relative', overflow: 'hidden',
+      color: '#1a1a2e', position: 'relative', overflow: 'hidden',
     }}>
-      <div style={{ position: 'absolute', top: -150, right: -150, width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(110,231,183,.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: -100, left: -100, width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(59,130,246,.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: -150, right: -150, width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(26,86,219,.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: -100, left: -100, width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(26,86,219,.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
       <div style={{
         width: '100%', maxWidth: 400,
-        background: 'rgba(255,255,255,.025)',
-        border: '1px solid rgba(255,255,255,.08)',
+        background: '#ffffff',
+        border: '1px solid #E5E3DC',
         borderRadius: 20, padding: '2.5rem',
         position: 'relative', zIndex: 1,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2.25rem' }}>
           <div style={{
-            width: 44, height: 44, background: '#6ee7b7', color: '#0a0a0f',
+            width: 44, height: 44, background: '#1A56DB', color: '#ffffff',
             borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontWeight: 800, fontSize: '.9rem', fontFamily: "'Syne', sans-serif", flexShrink: 0,
           }}>CS</div>
           <div>
-            <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '1.15rem', color: '#e8e8f0' }}>
+            <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '1.15rem', color: '#1a1a2e' }}>
               Administration
             </div>
-            <div style={{ fontSize: '.8rem', color: '#555568', marginTop: '.1rem' }}>
+            <div style={{ fontSize: '.8rem', color: '#6B6A80', marginTop: '.1rem' }}>
               Portfolio Charles Sacca
             </div>
           </div>
@@ -66,15 +66,15 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
           {error && (
             <div style={{
-              background: 'rgba(239,68,68,.1)', border: '1px solid rgba(239,68,68,.2)',
-              color: '#f87171', padding: '.75rem 1rem', borderRadius: 10, fontSize: '.85rem',
+              background: 'rgba(239,68,68,.08)', border: '1px solid rgba(239,68,68,.2)',
+              color: '#DC2626', padding: '.75rem 1rem', borderRadius: 10, fontSize: '.85rem',
             }}>
               {error}
             </div>
           )}
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '.45rem' }}>
-            <label style={{ fontSize: '.75rem', textTransform: 'uppercase', letterSpacing: '.07em', color: '#555568', fontWeight: 600 }}>
+            <label style={{ fontSize: '.75rem', textTransform: 'uppercase', letterSpacing: '.07em', color: '#6B6A80', fontWeight: 600 }}>
               Adresse email
             </label>
             <input
@@ -83,17 +83,17 @@ export default function LoginPage() {
               placeholder="charles@charlessacca.dev"
               required autoComplete="email"
               style={{
-                background: 'rgba(255,255,255,.04)',
-                border: '1px solid rgba(255,255,255,.08)',
+                background: '#FAFAF8',
+                border: '1px solid #E5E3DC',
                 borderRadius: 10, padding: '.75rem 1rem',
-                color: '#e8e8f0', fontFamily: "'DM Sans', sans-serif",
+                color: '#1a1a2e', fontFamily: "'DM Sans', sans-serif",
                 fontSize: '.9rem', outline: 'none', width: '100%',
               }}
             />
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '.45rem' }}>
-            <label style={{ fontSize: '.75rem', textTransform: 'uppercase', letterSpacing: '.07em', color: '#555568', fontWeight: 600 }}>
+            <label style={{ fontSize: '.75rem', textTransform: 'uppercase', letterSpacing: '.07em', color: '#6B6A80', fontWeight: 600 }}>
               Mot de passe
             </label>
             <input
@@ -102,10 +102,10 @@ export default function LoginPage() {
               placeholder="••••••••••••"
               required autoComplete="current-password"
               style={{
-                background: 'rgba(255,255,255,.04)',
-                border: '1px solid rgba(255,255,255,.08)',
+                background: '#FAFAF8',
+                border: '1px solid #E5E3DC',
                 borderRadius: 10, padding: '.75rem 1rem',
-                color: '#e8e8f0', fontFamily: "'DM Sans', sans-serif",
+                color: '#1a1a2e', fontFamily: "'DM Sans', sans-serif",
                 fontSize: '.9rem', outline: 'none', width: '100%',
               }}
             />
@@ -114,7 +114,7 @@ export default function LoginPage() {
           <button
             type="submit" disabled={loading}
             style={{
-              background: '#6ee7b7', color: '#0a0a0f', border: 'none',
+              background: '#1A56DB', color: '#ffffff', border: 'none',
               padding: '.85rem', borderRadius: 10, fontWeight: 800,
               fontSize: '.9rem', cursor: loading ? 'not-allowed' : 'pointer',
               fontFamily: "'Syne', sans-serif", marginTop: '.25rem',
@@ -126,7 +126,7 @@ export default function LoginPage() {
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
-          <a href="/" style={{ fontSize: '.82rem', color: '#444458', textDecoration: 'none' }}>
+          <a href="/" style={{ fontSize: '.82rem', color: '#6B6A80', textDecoration: 'none' }}>
             ← Retour au site
           </a>
         </div>

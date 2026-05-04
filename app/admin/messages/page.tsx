@@ -1,5 +1,5 @@
 // ==========================================================
-//  app/admin/messages/page.tsx – Gestion des messages
+//  app/admin/messages/page.tsx
 // ==========================================================
 
 import type { Metadata } from 'next'
@@ -16,17 +16,14 @@ interface Props {
 
 async function getMessages(filters: Props['searchParams']) {
   const status = (filters.status?.toUpperCase() as MessageStatus) || undefined
-  const page   = parseInt(filters.page || '1')
-  const limit  = 15
-
+  const page = parseInt(filters.page || '1')
+  const limit = 15
   const where = status ? { status } : {}
 
   const [messages, total] = await Promise.all([
     prisma.contactMessage.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
-      skip: (page - 1) * limit,
-      take: limit,
+      where, orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * limit, take: limit,
     }),
     prisma.contactMessage.count({ where }),
   ])
@@ -37,19 +34,16 @@ async function getMessages(filters: Props['searchParams']) {
 export default async function MessagesPage({ searchParams }: Props) {
   const { messages, total, page, pages } = await getMessages(searchParams)
 
-  const counts = await prisma.contactMessage.groupBy({
-    by: ['status'],
-    _count: true,
-  })
+  const counts = await prisma.contactMessage.groupBy({ by: ['status'], _count: true })
   const countMap = Object.fromEntries(counts.map(c => [c.status, c._count]))
 
   const tabs = [
-    { label: 'Tous',      value: '',         count: total },
-    { label: 'Non lus',   value: 'unread',   count: countMap['UNREAD']   ?? 0 },
-    { label: 'Lus',       value: 'read',     count: countMap['READ']     ?? 0 },
-    { label: 'Répondus',  value: 'replied',  count: countMap['REPLIED']  ?? 0 },
-    { label: 'Archivés',  value: 'archived', count: countMap['ARCHIVED'] ?? 0 },
-    { label: 'Spam',      value: 'spam',     count: countMap['SPAM']     ?? 0 },
+    { label: 'Tous', value: '', count: total },
+    { label: 'Non lus', value: 'unread', count: countMap['UNREAD'] ?? 0 },
+    { label: 'Lus', value: 'read', count: countMap['READ'] ?? 0 },
+    { label: 'Répondus', value: 'replied', count: countMap['REPLIED'] ?? 0 },
+    { label: 'Archivés', value: 'archived', count: countMap['ARCHIVED'] ?? 0 },
+    { label: 'Spam', value: 'spam', count: countMap['SPAM'] ?? 0 },
   ]
 
   return (
@@ -62,12 +56,11 @@ export default async function MessagesPage({ searchParams }: Props) {
         {countMap['UNREAD'] > 0 && (
           <div className="unread-notice">
             <span className="notice-dot" />
-            {countMap['UNREAD']} message{countMap['UNREAD'] > 1 ? 's' : ''} non lu{countMap['UNREAD'] > 1 ? 's' : ''}
+            {countMap['UNREAD']} non lu{countMap['UNREAD'] > 1 ? 's' : ''}
           </div>
         )}
       </div>
 
-      {/* Filtres par statut */}
       <div className="filter-tabs">
         {tabs.map(tab => (
           <Link
@@ -81,7 +74,6 @@ export default async function MessagesPage({ searchParams }: Props) {
         ))}
       </div>
 
-      {/* Liste des messages */}
       <div className="messages-container">
         {messages.length === 0 ? (
           <div className="empty-state">
@@ -90,53 +82,40 @@ export default async function MessagesPage({ searchParams }: Props) {
           </div>
         ) : (
           messages.map(msg => (
-            <div
-              key={msg.id}
-              className={`message-card ${msg.status === 'UNREAD' ? 'unread' : ''}`}
-            >
-              {/* En-tête du message */}
+            <div key={msg.id} className={`message-card ${msg.status === 'UNREAD' ? 'unread' : ''}`}>
               <div className="msg-header">
                 <div className="msg-left">
-                  <div className="msg-avatar">
-                    {msg.name.slice(0, 2).toUpperCase()}
-                  </div>
+                  <div className="msg-avatar">{msg.name.slice(0, 2).toUpperCase()}</div>
                   <div>
                     <div className="msg-name">
                       {msg.name}
-                      {msg.status === 'UNREAD' && (
-                        <span className="unread-badge">Nouveau</span>
-                      )}
+                      {msg.status === 'UNREAD' && <span className="unread-badge">Nouveau</span>}
                     </div>
-                    <a href={`mailto:${msg.email}`} className="msg-email">
-                      {msg.email}
-                    </a>
+                    <a href={`mailto:${msg.email}`} className="msg-email">{msg.email}</a>
                   </div>
                 </div>
                 <div className="msg-right">
                   <span className={`status-pill status-${msg.status.toLowerCase()}`}>
-                    {{ UNREAD: 'Non lu', READ: 'Lu', REPLIED: 'Répondu',
-                       ARCHIVED: 'Archivé', SPAM: 'Spam' }[msg.status]}
+                    {{ UNREAD: 'Non lu', READ: 'Lu', REPLIED: 'Répondu', ARCHIVED: 'Archivé', SPAM: 'Spam' }[msg.status]}
                   </span>
                   <span className="msg-date">
                     {new Date(msg.createdAt).toLocaleDateString('fr-FR', {
                       day: '2-digit', month: 'short', year: 'numeric',
-                      hour: '2-digit', minute: '2-digit'
+                      hour: '2-digit', minute: '2-digit',
                     })}
                   </span>
                 </div>
               </div>
 
-              {/* Sujet */}
               <div className="msg-subject">{msg.subject}</div>
-
-              {/* Corps du message */}
               <div className="msg-body">{msg.message}</div>
 
-              {/* Actions */}
               <div className="msg-footer">
                 <div className="msg-actions">
-                  <a href={`mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject)}`}
-                     className="action-btn reply-btn">
+                  <a
+                    href={`mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject)}`}
+                    className="action-btn reply-btn"
+                  >
                     ↩ Répondre par email
                   </a>
                   <MessageActions id={msg.id} status={msg.status} />
@@ -152,7 +131,6 @@ export default async function MessagesPage({ searchParams }: Props) {
         )}
       </div>
 
-      {/* Pagination */}
       {pages > 1 && (
         <div className="pagination">
           {Array.from({ length: pages }, (_, i) => i + 1).map(p => (
@@ -160,9 +138,7 @@ export default async function MessagesPage({ searchParams }: Props) {
               key={p}
               href={`/admin/messages?page=${p}${searchParams.status ? `&status=${searchParams.status}` : ''}`}
               className={`page-btn ${p === page ? 'active' : ''}`}
-            >
-              {p}
-            </Link>
+            >{p}</Link>
           ))}
         </div>
       )}
@@ -171,110 +147,122 @@ export default async function MessagesPage({ searchParams }: Props) {
         .page-header {
           display: flex; align-items: center;
           justify-content: space-between;
-          margin-bottom: 1.5rem; gap: 1rem;
+          margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap;
         }
         .page-title {
           font-family: 'Syne', sans-serif; font-weight: 800;
           font-size: 1.6rem; letter-spacing: -.02em;
-          color: #e8e8f0; margin-bottom: .2rem;
+          color: var(--admin-text); margin-bottom: .2rem;
         }
-        .page-sub { font-size: .875rem; color: #666680; }
+        .page-sub { font-size: .875rem; color: var(--admin-muted); }
+
         .unread-notice {
           display: flex; align-items: center; gap: .5rem;
-          background: rgba(251,191,36,.08);
-          border: 1px solid rgba(251,191,36,.15);
-          padding: .5rem 1rem; border-radius: 99px;
-          font-size: .82rem; font-weight: 600; color: #fbbf24;
+          background: #FEF3C7; border: 1px solid #FDE68A;
+          padding: .45rem 1rem; border-radius: 99px;
+          font-size: .82rem; font-weight: 600; color: #92400E;
         }
         .notice-dot {
           width: 7px; height: 7px; border-radius: 50%;
-          background: #fbbf24; animation: pulse 2s infinite;
+          background: #D97706; animation: pulse 2s infinite;
         }
 
-        /* Filtres */
         .filter-tabs {
-          display: flex; gap: .35rem; flex-wrap: wrap;
-          margin-bottom: 1.5rem;
+          display: flex; gap: .35rem; flex-wrap: wrap; margin-bottom: 1.5rem;
         }
         .filter-tab {
           display: flex; align-items: center; gap: .4rem;
           padding: .45rem .9rem; border-radius: 8px;
           text-decoration: none; font-size: .82rem;
-          font-weight: 500; color: #666680;
+          font-weight: 500; color: var(--admin-muted);
           border: 1px solid transparent; transition: all .18s;
         }
-        .filter-tab:hover { color: #e8e8f0; background: rgba(255,255,255,.04); }
+        .filter-tab:hover {
+          color: var(--admin-text);
+          background: var(--admin-bg);
+          border-color: var(--admin-border);
+        }
         .filter-tab.active {
-          color: #6ee7b7; background: rgba(110,231,183,.08);
-          border-color: rgba(110,231,183,.15);
+          color: var(--admin-accent);
+          background: var(--admin-accent-l);
+          border-color: var(--admin-accent-m);
         }
         .tab-count {
-          background: rgba(255,255,255,.08); color: #888;
+          background: var(--admin-bg-2); color: var(--admin-muted);
           font-size: .68rem; font-weight: 700;
           padding: .1rem .45rem; border-radius: 99px;
+          border: 1px solid var(--admin-border);
         }
-        .filter-tab.active .tab-count { background: rgba(110,231,183,.1); color: #6ee7b7; }
+        .filter-tab.active .tab-count {
+          background: var(--admin-accent-m);
+          color: var(--admin-accent);
+          border-color: var(--admin-accent-m);
+        }
 
-        /* Messages */
-        .messages-container { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
-
+        .messages-container {
+          display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;
+        }
         .message-card {
-          background: rgba(255,255,255,.025);
-          border: 1px solid rgba(255,255,255,.06);
+          background: var(--admin-card);
+          border: 1px solid var(--admin-border);
           border-radius: 14px; padding: 1.5rem;
-          transition: border-color .2s;
+          transition: box-shadow .2s;
         }
-        .message-card:hover { border-color: rgba(255,255,255,.1); }
+        .message-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,.06); }
         .message-card.unread {
-          border-color: rgba(110,231,183,.15);
-          background: rgba(110,231,183,.02);
+          border-color: var(--admin-accent-m);
+          background: var(--admin-accent-l);
         }
 
         .msg-header {
           display: flex; align-items: flex-start;
           justify-content: space-between; gap: 1rem;
-          margin-bottom: .875rem;
+          margin-bottom: .875rem; flex-wrap: wrap;
         }
         .msg-left { display: flex; align-items: center; gap: .875rem; }
         .msg-avatar {
           width: 42px; height: 42px; border-radius: 12px;
-          background: rgba(59,130,246,.15); color: #60a5fa;
+          background: var(--admin-accent-l); color: var(--admin-accent);
           display: flex; align-items: center; justify-content: center;
-          font-weight: 800; font-size: .8rem; font-family: 'Syne', sans-serif;
-          flex-shrink: 0;
+          font-weight: 800; font-size: .8rem;
+          font-family: 'Syne', sans-serif; flex-shrink: 0;
+          border: 1px solid var(--admin-accent-m);
         }
         .msg-name {
-          font-size: .95rem; font-weight: 700; color: #e8e8f0;
+          font-size: .95rem; font-weight: 700; color: var(--admin-text);
           display: flex; align-items: center; gap: .5rem; margin-bottom: .2rem;
+          flex-wrap: wrap;
         }
         .unread-badge {
-          background: rgba(110,231,183,.1); color: #6ee7b7;
+          background: var(--admin-accent); color: #fff;
           font-size: .65rem; font-weight: 700;
           padding: .15rem .55rem; border-radius: 99px;
-          border: 1px solid rgba(110,231,183,.2);
           text-transform: uppercase; letter-spacing: .05em;
         }
         .msg-email {
-          font-size: .82rem; color: #60a5fa;
+          font-size: .82rem; color: var(--admin-accent);
           text-decoration: none; transition: opacity .2s;
         }
         .msg-email:hover { opacity: .75; }
-        .msg-right { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
-        .msg-date { font-size: .75rem; color: #444458; white-space: nowrap; }
+        .msg-right {
+          display: flex; align-items: center; gap: .75rem;
+          flex-shrink: 0; flex-wrap: wrap;
+        }
+        .msg-date { font-size: .75rem; color: var(--admin-muted); white-space: nowrap; }
 
         .msg-subject {
-          font-size: .9rem; font-weight: 600; color: #c8c8d8;
+          font-size: .9rem; font-weight: 600; color: var(--admin-text);
           margin-bottom: .75rem;
         }
         .msg-body {
-          font-size: .875rem; color: #8888a0; line-height: 1.7;
+          font-size: .875rem; color: var(--admin-muted); line-height: 1.7;
           margin-bottom: 1.25rem; white-space: pre-wrap;
-          background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.05);
+          background: var(--admin-bg); border: 1px solid var(--admin-border);
           border-radius: 9px; padding: 1rem 1.25rem;
         }
         .msg-footer {
           display: flex; align-items: center;
-          justify-content: space-between; gap: 1rem;
+          justify-content: space-between; gap: 1rem; flex-wrap: wrap;
         }
         .msg-actions { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
         .action-btn {
@@ -284,49 +272,52 @@ export default async function MessagesPage({ searchParams }: Props) {
           font-family: 'DM Sans', sans-serif;
         }
         .reply-btn {
-          background: rgba(96,165,250,.1); color: #60a5fa;
-          border: 1px solid rgba(96,165,250,.2);
+          background: var(--admin-accent-l); color: var(--admin-accent);
+          border: 1px solid var(--admin-accent-m);
         }
-        .reply-btn:hover { background: rgba(96,165,250,.18); }
-        .replied-note { font-size: .75rem; color: #444458; }
+        .reply-btn:hover { background: var(--admin-accent-m); }
+        .replied-note { font-size: .75rem; color: var(--admin-muted); }
 
-        /* Status pills */
         .status-pill {
           font-size: .7rem; font-weight: 700;
-          padding: .22rem .65rem; border-radius: 99px;
-          white-space: nowrap;
+          padding: .22rem .65rem; border-radius: 99px; white-space: nowrap;
         }
-        .status-unread   { background: rgba(110,231,183,.1); color: #6ee7b7; border: 1px solid rgba(110,231,183,.2); }
-        .status-read     { background: rgba(255,255,255,.06); color: #888; border: 1px solid rgba(255,255,255,.09); }
-        .status-replied  { background: rgba(96,165,250,.1); color: #60a5fa; border: 1px solid rgba(96,165,250,.2); }
-        .status-archived { background: rgba(255,255,255,.04); color: #555568; border: 1px solid rgba(255,255,255,.06); }
-        .status-spam     { background: rgba(239,68,68,.08); color: #f87171; border: 1px solid rgba(239,68,68,.15); }
+        .status-unread   { background: #EBF0FD; color: #1A56DB; border: 1px solid #C7D4F9; }
+        .status-read     { background: var(--admin-bg-2); color: var(--admin-muted); border: 1px solid var(--admin-border); }
+        .status-replied  { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+        .status-archived { background: var(--admin-bg-2); color: var(--admin-muted); border: 1px solid var(--admin-border); }
+        .status-spam     { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
 
-        /* Pagination */
         .pagination { display: flex; gap: .4rem; justify-content: center; margin-bottom: 2rem; }
         .page-btn {
           width: 34px; height: 34px;
           display: flex; align-items: center; justify-content: center;
           border-radius: 8px; text-decoration: none;
-          font-size: .82rem; font-weight: 600; color: #666680;
-          border: 1px solid rgba(255,255,255,.06); transition: all .18s;
+          font-size: .82rem; font-weight: 600; color: var(--admin-muted);
+          border: 1px solid var(--admin-border); transition: all .18s;
         }
-        .page-btn:hover { background: rgba(255,255,255,.05); color: #e8e8f0; }
-        .page-btn.active { background: rgba(110,231,183,.1); color: #6ee7b7; border-color: rgba(110,231,183,.2); }
+        .page-btn:hover { background: var(--admin-bg-2); color: var(--admin-text); }
+        .page-btn.active {
+          background: var(--admin-accent); color: #fff;
+          border-color: var(--admin-accent);
+        }
 
-        /* Empty */
         .empty-state {
           padding: 4rem 2rem; text-align: center;
-          background: rgba(255,255,255,.015);
-          border: 1px solid rgba(255,255,255,.06);
+          background: var(--admin-card);
+          border: 1px solid var(--admin-border);
           border-radius: 14px;
         }
         .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-        .empty-title { font-size: .95rem; color: #555568; }
+        .empty-title { font-size: .95rem; color: var(--admin-muted); }
 
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50%       { opacity: .4; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+
+        @media (max-width: 768px) {
+          .msg-header { flex-direction: column; }
+          .msg-right { justify-content: flex-start; }
+          .msg-footer { flex-direction: column; align-items: flex-start; }
+          .page-header { flex-direction: column; align-items: flex-start; }
         }
       `}</style>
     </>

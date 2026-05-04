@@ -1,5 +1,5 @@
 // ==========================================================
-//  app/admin/projets/page.tsx – Liste des projets
+//  app/admin/projets/page.tsx
 // ==========================================================
 
 import type { Metadata } from 'next'
@@ -17,14 +17,14 @@ interface Props {
 async function getProjects(filters: Props['searchParams']) {
   const status = (filters.status?.toUpperCase() as ProjectStatus) || undefined
   const search = filters.q || ''
-  const page   = parseInt(filters.page || '1')
-  const limit  = 10
+  const page = parseInt(filters.page || '1')
+  const limit = 10
 
   const where = {
     ...(status && { status }),
     ...(search && {
       OR: [
-        { title:       { contains: search, mode: 'insensitive' as const } },
+        { title: { contains: search, mode: 'insensitive' as const } },
         { description: { contains: search, mode: 'insensitive' as const } },
       ],
     }),
@@ -50,10 +50,7 @@ async function getProjects(filters: Props['searchParams']) {
 export default async function ProjectsPage({ searchParams }: Props) {
   const { projects, total, page, pages } = await getProjects(searchParams)
 
-  const counts = await prisma.project.groupBy({
-    by: ['status'],
-    _count: true,
-  })
+  const counts = await prisma.project.groupBy({ by: ['status'], _count: true })
   const countMap = Object.fromEntries(counts.map(c => [c.status, c._count]))
 
   return (
@@ -66,14 +63,13 @@ export default async function ProjectsPage({ searchParams }: Props) {
         <Link href="/admin/projets/nouveau" className="btn-primary">+ Nouveau projet</Link>
       </div>
 
-      {/* ── Filtres ── */}
       <div className="filters-bar">
         <div className="filter-tabs">
           {[
-            { label: 'Tous',       value: '',          count: total },
-            { label: 'Publiés',    value: 'published', count: countMap['PUBLISHED'] ?? 0 },
-            { label: 'Brouillons', value: 'draft',     count: countMap['DRAFT'] ?? 0 },
-            { label: 'Archivés',   value: 'archived',  count: countMap['ARCHIVED'] ?? 0 },
+            { label: 'Tous', value: '', count: total },
+            { label: 'Publiés', value: 'published', count: countMap['PUBLISHED'] ?? 0 },
+            { label: 'Brouillons', value: 'draft', count: countMap['DRAFT'] ?? 0 },
+            { label: 'Archivés', value: 'archived', count: countMap['ARCHIVED'] ?? 0 },
           ].map(tab => (
             <Link
               key={tab.value}
@@ -85,13 +81,10 @@ export default async function ProjectsPage({ searchParams }: Props) {
             </Link>
           ))}
         </div>
-
-        {/* Recherche */}
         <form method="GET" className="search-form">
           {searchParams.status && <input type="hidden" name="status" value={searchParams.status} />}
           <input
-            type="search"
-            name="q"
+            type="search" name="q"
             defaultValue={searchParams.q}
             placeholder="Rechercher un projet..."
             className="search-input"
@@ -99,7 +92,6 @@ export default async function ProjectsPage({ searchParams }: Props) {
         </form>
       </div>
 
-      {/* ── Table des projets ── */}
       <div className="table-card">
         {projects.length === 0 ? (
           <div className="empty-state">
@@ -114,10 +106,10 @@ export default async function ProjectsPage({ searchParams }: Props) {
             <thead>
               <tr>
                 <th>Projet</th>
-                <th>Technologies</th>
+                <th className="hide-mobile">Technologies</th>
                 <th>Statut</th>
-                <th>Mis en avant</th>
-                <th>Date</th>
+                <th className="hide-mobile">Mis en avant</th>
+                <th className="hide-mobile">Date</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -132,12 +124,10 @@ export default async function ProjectsPage({ searchParams }: Props) {
                       <div className="project-slug">/{project.slug}</div>
                     </div>
                   </td>
-                  <td>
+                  <td className="hide-mobile">
                     <div className="tech-tags">
                       {project.technologies.slice(0, 3).map(pt => (
-                        <span key={pt.technology.name} className="tech-tag">
-                          {pt.technology.name}
-                        </span>
+                        <span key={pt.technology.name} className="tech-tag">{pt.technology.name}</span>
                       ))}
                       {project.technologies.length > 3 && (
                         <span className="tech-tag more">+{project.technologies.length - 3}</span>
@@ -146,19 +136,17 @@ export default async function ProjectsPage({ searchParams }: Props) {
                   </td>
                   <td>
                     <span className={`status-pill ${project.status.toLowerCase()}`}>
-                      {project.status === 'PUBLISHED' ? 'Publié'
-                       : project.status === 'DRAFT'   ? 'Brouillon'
-                       :                                'Archivé'}
+                      {project.status === 'PUBLISHED' ? 'Publié' : project.status === 'DRAFT' ? 'Brouillon' : 'Archivé'}
                     </span>
                   </td>
-                  <td>
+                  <td className="hide-mobile">
                     <span className={`featured-pill ${project.featured ? 'yes' : 'no'}`}>
                       {project.featured ? '★ Oui' : '—'}
                     </span>
                   </td>
-                  <td className="date-cell">
+                  <td className="date-cell hide-mobile">
                     {new Date(project.createdAt).toLocaleDateString('fr-FR', {
-                      day: '2-digit', month: 'short', year: 'numeric'
+                      day: '2-digit', month: 'short', year: 'numeric',
                     })}
                   </td>
                   <td>
@@ -171,7 +159,6 @@ export default async function ProjectsPage({ searchParams }: Props) {
         )}
       </div>
 
-      {/* ── Pagination ── */}
       {pages > 1 && (
         <div className="pagination">
           {Array.from({ length: pages }, (_, i) => i + 1).map(p => (
@@ -179,9 +166,7 @@ export default async function ProjectsPage({ searchParams }: Props) {
               key={p}
               href={`/admin/projets?page=${p}${searchParams.status ? `&status=${searchParams.status}` : ''}`}
               className={`page-btn ${p === page ? 'active' : ''}`}
-            >
-              {p}
-            </Link>
+            >{p}</Link>
           ))}
         </div>
       )}
@@ -190,24 +175,25 @@ export default async function ProjectsPage({ searchParams }: Props) {
         .page-header {
           display: flex; align-items: flex-start;
           justify-content: space-between;
-          margin-bottom: 1.75rem; gap: 1rem;
+          margin-bottom: 1.75rem; gap: 1rem; flex-wrap: wrap;
         }
         .page-title {
           font-family: 'Syne', sans-serif; font-weight: 800;
           font-size: 1.6rem; letter-spacing: -.02em;
-          color: #e8e8f0; margin-bottom: .2rem;
+          color: var(--admin-text); margin-bottom: .2rem;
         }
-        .page-sub { font-size: .875rem; color: #666680; }
+        .page-sub { font-size: .875rem; color: var(--admin-muted); }
+
         .btn-primary {
-          background: #6ee7b7; color: #0a0a12;
+          background: var(--admin-accent); color: #ffffff;
           padding: .6rem 1.25rem; border-radius: 8px;
           text-decoration: none; font-weight: 700;
           font-size: .85rem; font-family: 'Syne', sans-serif;
           white-space: nowrap; transition: opacity .2s;
+          display: inline-block;
         }
         .btn-primary:hover { opacity: .88; }
 
-        /* Filtres */
         .filters-bar {
           display: flex; align-items: center;
           justify-content: space-between;
@@ -218,114 +204,120 @@ export default async function ProjectsPage({ searchParams }: Props) {
           display: flex; align-items: center; gap: .4rem;
           padding: .45rem .9rem; border-radius: 8px;
           text-decoration: none; font-size: .82rem;
-          font-weight: 500; color: #666680;
-          border: 1px solid transparent;
-          transition: all .18s;
+          font-weight: 500; color: var(--admin-muted);
+          border: 1px solid transparent; transition: all .18s;
         }
-        .filter-tab:hover { color: #e8e8f0; background: rgba(255,255,255,.04); }
+        .filter-tab:hover {
+          color: var(--admin-text);
+          background: var(--admin-bg);
+          border-color: var(--admin-border);
+        }
         .filter-tab.active {
-          color: #6ee7b7; background: rgba(110,231,183,.08);
-          border-color: rgba(110,231,183,.15);
+          color: var(--admin-accent);
+          background: var(--admin-accent-l);
+          border-color: var(--admin-accent-m);
         }
         .tab-count {
-          background: rgba(255,255,255,.08);
-          color: #888; font-size: .68rem; font-weight: 700;
+          background: var(--admin-bg-2); color: var(--admin-muted);
+          font-size: .68rem; font-weight: 700;
           padding: .1rem .45rem; border-radius: 99px;
+          border: 1px solid var(--admin-border);
         }
-        .filter-tab.active .tab-count { background: rgba(110,231,183,.1); color: #6ee7b7; }
+        .filter-tab.active .tab-count {
+          background: var(--admin-accent-m); color: var(--admin-accent);
+        }
+
         .search-form { display: flex; }
         .search-input {
-          background: rgba(255,255,255,.04);
-          border: 1px solid rgba(255,255,255,.08);
+          background: var(--admin-card);
+          border: 1px solid var(--admin-border);
           border-radius: 8px; padding: .5rem .875rem;
-          color: #e8e8f0; font-size: .85rem;
-          outline: none; width: 220px;
+          color: var(--admin-text); font-size: .85rem;
+          outline: none; width: 220px; max-width: 100%;
           transition: border-color .2s;
           font-family: 'DM Sans', sans-serif;
         }
-        .search-input:focus { border-color: rgba(110,231,183,.35); }
-        .search-input::placeholder { color: #444458; }
+        .search-input:focus { border-color: var(--admin-accent); }
+        .search-input::placeholder { color: var(--admin-muted); }
 
-        /* Table */
         .table-card {
-          background: rgba(255,255,255,.025);
-          border: 1px solid rgba(255,255,255,.06);
+          background: var(--admin-card);
+          border: 1px solid var(--admin-border);
           border-radius: 14px; overflow: hidden;
-          margin-bottom: 1.5rem;
+          margin-bottom: 1.5rem; overflow-x: auto;
         }
         .data-table {
-          width: 100%; border-collapse: collapse;
-          font-size: .85rem;
+          width: 100%; border-collapse: collapse; font-size: .85rem;
+          min-width: 500px;
         }
         .data-table th {
-          padding: .75rem 1.25rem;
-          text-align: left; font-size: .72rem;
-          text-transform: uppercase; letter-spacing: .07em;
-          color: #555568; font-weight: 600;
-          border-bottom: 1px solid rgba(255,255,255,.06);
-          background: rgba(255,255,255,.02);
+          padding: .75rem 1.25rem; text-align: left;
+          font-size: .72rem; text-transform: uppercase;
+          letter-spacing: .07em; color: var(--admin-muted);
+          font-weight: 600; border-bottom: 1px solid var(--admin-border);
+          background: var(--admin-bg); white-space: nowrap;
         }
         .data-table td {
           padding: .9rem 1.25rem;
-          border-bottom: 1px solid rgba(255,255,255,.04);
+          border-bottom: 1px solid var(--admin-border);
           vertical-align: middle;
         }
         .data-table tr:last-child td { border-bottom: none; }
-        .data-table tr:hover td { background: rgba(255,255,255,.02); }
+        .data-table tr:hover td { background: var(--admin-bg); }
 
-        .project-cell { min-width: 180px; }
+        .project-cell { min-width: 160px; }
         .project-title-link {
-          font-weight: 600; color: #e8e8f0;
-          text-decoration: none; font-size: .875rem;
-          transition: color .18s;
+          font-weight: 600; color: var(--admin-text);
+          text-decoration: none; font-size: .875rem; transition: color .18s;
         }
-        .project-title-link:hover { color: #6ee7b7; }
-        .project-slug { font-size: .72rem; color: #444458; margin-top: .15rem; }
+        .project-title-link:hover { color: var(--admin-accent); }
+        .project-slug { font-size: .72rem; color: var(--admin-muted); margin-top: .15rem; }
 
         .tech-tags { display: flex; gap: .35rem; flex-wrap: wrap; }
         .tech-tag {
-          background: rgba(255,255,255,.05);
-          border: 1px solid rgba(255,255,255,.08);
-          color: #888; font-size: .7rem;
+          background: var(--admin-bg); border: 1px solid var(--admin-border);
+          color: var(--admin-muted); font-size: .7rem;
           padding: .15rem .5rem; border-radius: 5px;
         }
-        .tech-tag.more { color: #555568; }
+        .tech-tag.more { color: var(--admin-muted); }
 
         .status-pill {
           font-size: .72rem; font-weight: 700;
-          padding: .25rem .65rem; border-radius: 99px;
-          white-space: nowrap;
+          padding: .25rem .65rem; border-radius: 99px; white-space: nowrap;
         }
-        .status-pill.published { background: rgba(110,231,183,.1); color: #6ee7b7; border: 1px solid rgba(110,231,183,.2); }
-        .status-pill.draft     { background: rgba(255,255,255,.05); color: #888; border: 1px solid rgba(255,255,255,.08); }
-        .status-pill.archived  { background: rgba(239,68,68,.08); color: #f87171; border: 1px solid rgba(239,68,68,.15); }
+        .status-pill.published { background: #EBF0FD; color: #1A56DB; border: 1px solid #C7D4F9; }
+        .status-pill.draft     { background: var(--admin-bg-2); color: var(--admin-muted); border: 1px solid var(--admin-border); }
+        .status-pill.archived  { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
 
-        .featured-pill { font-size: .78rem; color: #fbbf24; font-weight: 600; }
-        .featured-pill.no { color: #333348; }
+        .featured-pill { font-size: .78rem; color: #B45309; font-weight: 600; }
+        .featured-pill.no { color: var(--admin-muted); }
 
-        .date-cell { color: #555568; font-size: .8rem; white-space: nowrap; }
+        .date-cell { color: var(--admin-muted); font-size: .8rem; white-space: nowrap; }
 
-        /* Pagination */
         .pagination { display: flex; gap: .4rem; justify-content: center; }
         .page-btn {
           width: 34px; height: 34px;
           display: flex; align-items: center; justify-content: center;
           border-radius: 8px; text-decoration: none;
-          font-size: .82rem; font-weight: 600;
-          color: #666680;
-          border: 1px solid rgba(255,255,255,.06);
-          transition: all .18s;
+          font-size: .82rem; font-weight: 600; color: var(--admin-muted);
+          border: 1px solid var(--admin-border); transition: all .18s;
         }
-        .page-btn:hover { background: rgba(255,255,255,.05); color: #e8e8f0; }
-        .page-btn.active { background: rgba(110,231,183,.1); color: #6ee7b7; border-color: rgba(110,231,183,.2); }
+        .page-btn:hover { background: var(--admin-bg-2); color: var(--admin-text); }
+        .page-btn.active { background: var(--admin-accent); color: #fff; border-color: var(--admin-accent); }
 
-        /* Empty */
         .empty-state {
           padding: 4rem 2rem; text-align: center;
           display: flex; flex-direction: column; align-items: center;
         }
         .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-        .empty-title { font-size: 1rem; color: #666680; font-weight: 500; }
+        .empty-title { font-size: 1rem; color: var(--admin-muted); font-weight: 500; }
+
+        @media (max-width: 768px) {
+          .hide-mobile { display: none; }
+          .page-header { flex-direction: column; }
+          .filters-bar { flex-direction: column; align-items: flex-start; }
+          .search-input { width: 100%; }
+        }
       `}</style>
     </>
   )

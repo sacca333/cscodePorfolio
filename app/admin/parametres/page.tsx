@@ -1,6 +1,6 @@
 'use client'
 // ==========================================================
-//  app/admin/parametres/page.tsx – Paramètres du site
+//  app/admin/parametres/page.tsx
 // ==========================================================
 
 import { useState, useEffect } from 'react'
@@ -23,11 +23,11 @@ const EMPTY: Settings = {
 
 export default function ParametresPage() {
   const [settings, setSettings] = useState<Settings>(EMPTY)
-  const [loading, setLoading]   = useState(true)
-  const [saving,  setSaving]    = useState(false)
-  const [saved,   setSaved]     = useState(false)
-  const [error,   setError]     = useState('')
-  const [tab,     setTab]       = useState<'profil' | 'seo' | 'reseaux'>('profil')
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [error, setError] = useState('')
+  const [tab, setTab] = useState<'profil' | 'seo' | 'reseaux'>('profil')
 
   useEffect(() => {
     fetch('/api/settings')
@@ -49,7 +49,11 @@ export default function ParametresPage() {
     setSaving(false)
   }
 
-  if (loading) return <div style={{ color: '#666680', padding: '3rem', textAlign: 'center' }}>Chargement...</div>
+  if (loading) return (
+    <div style={{ color: 'var(--admin-muted)', padding: '3rem', textAlign: 'center' }}>
+      Chargement...
+    </div>
+  )
 
   return (
     <>
@@ -59,22 +63,17 @@ export default function ParametresPage() {
           <p className="page-sub">Personnalisez votre portfolio</p>
         </div>
         <div className="header-actions">
-          {saved  && <span className="saved-badge">✓ Sauvegardé</span>}
-          {error  && <span className="error-badge">{error}</span>}
+          {saved && <span className="saved-badge">✓ Sauvegardé</span>}
+          {error && <span className="error-badge">{error}</span>}
           <button onClick={handleSave} disabled={saving} className="btn-primary">
             {saving ? 'Sauvegarde...' : 'Sauvegarder les changements'}
           </button>
         </div>
       </div>
 
-      {/* Onglets */}
       <div className="tabs">
         {(['profil', 'seo', 'reseaux'] as const).map(t => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`tab-btn ${tab === t ? 'active' : ''}`}
-          >
+          <button key={t} onClick={() => setTab(t)} className={`tab-btn ${tab === t ? 'active' : ''}`}>
             {{ profil: '👤 Profil', seo: '🔍 SEO & Site', reseaux: '🔗 Réseaux sociaux' }[t]}
           </button>
         ))}
@@ -82,12 +81,10 @@ export default function ParametresPage() {
 
       <div className="settings-body">
 
-        {/* ── Onglet Profil ── */}
         {tab === 'profil' && (
           <div className="settings-grid">
             <div className="form-card">
               <h2 className="section-title">Identité</h2>
-
               <Field label="Nom complet">
                 <input value={settings.fullName} onChange={e => set('fullName', e.target.value)} className="input" placeholder="Charles Sacca" />
               </Field>
@@ -103,18 +100,14 @@ export default function ParametresPage() {
               <Field label="URL du CV (PDF)">
                 <input value={settings.cvUrl} onChange={e => set('cvUrl', e.target.value)} className="input" placeholder="https://charlessacca.dev/cv.pdf" />
               </Field>
-
               <Field label="Biographie courte">
                 <textarea
-                  value={settings.bio}
-                  onChange={e => set('bio', e.target.value)}
-                  className="input textarea"
-                  rows={4}
+                  value={settings.bio} onChange={e => set('bio', e.target.value)}
+                  className="input textarea" rows={4}
                   placeholder="Développeur web full-stack passionné..."
                 />
                 <span className="hint">{settings.bio.length} / 500 caractères</span>
               </Field>
-
               <div className="toggle-field">
                 <div>
                   <div className="toggle-label">Disponible pour des missions</div>
@@ -144,12 +137,10 @@ export default function ParametresPage() {
           </div>
         )}
 
-        {/* ── Onglet SEO ── */}
         {tab === 'seo' && (
           <div className="form-card">
             <h2 className="section-title">SEO & Métadonnées</h2>
-
-            <Field label="Titre du site (balise <title>)">
+            <Field label="Titre du site (balise title)">
               <input value={settings.siteTitle} onChange={e => set('siteTitle', e.target.value)} className="input" placeholder="Charles Sacca – Développeur Full-Stack" />
               <span className="hint">{settings.siteTitle.length} / 60 caractères recommandés</span>
             </Field>
@@ -158,10 +149,8 @@ export default function ParametresPage() {
             </Field>
             <Field label="Description SEO (meta description)">
               <textarea
-                value={settings.siteDescription}
-                onChange={e => set('siteDescription', e.target.value)}
-                className="input textarea"
-                rows={3}
+                value={settings.siteDescription} onChange={e => set('siteDescription', e.target.value)}
+                className="input textarea" rows={3}
                 placeholder="Portfolio de Charles Sacca, développeur web full-stack basé à Cotonou, Bénin..."
               />
               <span className={`hint ${settings.siteDescription.length > 160 ? 'hint-warn' : ''}`}>
@@ -171,8 +160,6 @@ export default function ParametresPage() {
             <Field label="ID Google Analytics (optionnel)">
               <input value={settings.googleAnalyticsId} onChange={e => set('googleAnalyticsId', e.target.value)} className="input" placeholder="G-XXXXXXXXXX" />
             </Field>
-
-            {/* Aperçu SERP */}
             <div className="serp-preview">
               <div className="serp-title">{settings.siteTitle || 'Titre de votre page'}</div>
               <div className="serp-url">charlessacca.dev</div>
@@ -182,7 +169,6 @@ export default function ParametresPage() {
           </div>
         )}
 
-        {/* ── Onglet Réseaux ── */}
         {tab === 'reseaux' && (
           <div className="form-card">
             <h2 className="section-title">Liens réseaux sociaux</h2>
@@ -203,122 +189,116 @@ export default function ParametresPage() {
       <style>{`
         .page-header {
           display: flex; align-items: flex-start;
-          justify-content: space-between; margin-bottom: 1.75rem; gap: 1rem;
+          justify-content: space-between; margin-bottom: 1.75rem; gap: 1rem; flex-wrap: wrap;
         }
         .page-title {
           font-family: 'Syne', sans-serif; font-weight: 800;
           font-size: 1.6rem; letter-spacing: -.02em;
-          color: #e8e8f0; margin-bottom: .2rem;
+          color: var(--admin-text); margin-bottom: .2rem;
         }
-        .page-sub { font-size: .875rem; color: #666680; }
+        .page-sub { font-size: .875rem; color: var(--admin-muted); }
         .header-actions { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+
         .saved-badge {
-          font-size: .8rem; color: #6ee7b7;
-          background: rgba(110,231,183,.1);
-          padding: .3rem .75rem; border-radius: 99px;
-          border: 1px solid rgba(110,231,183,.2); font-weight: 600;
+          font-size: .8rem; color: #065F46;
+          background: #ECFDF5; padding: .3rem .75rem;
+          border-radius: 99px; border: 1px solid #A7F3D0; font-weight: 600;
         }
         .error-badge {
-          font-size: .8rem; color: #f87171;
-          background: rgba(239,68,68,.1);
-          padding: .3rem .75rem; border-radius: 99px;
-          border: 1px solid rgba(239,68,68,.2);
+          font-size: .8rem; color: #991B1B;
+          background: #FEF2F2; padding: .3rem .75rem;
+          border-radius: 99px; border: 1px solid #FECACA;
         }
         .btn-primary {
-          background: #6ee7b7; color: #0a0a12;
+          background: var(--admin-accent); color: #ffffff;
           padding: .6rem 1.35rem; border-radius: 8px;
           border: none; font-weight: 700; font-size: .85rem;
-          font-family: 'Syne', sans-serif; cursor: pointer;
-          transition: opacity .2s;
+          font-family: 'Syne', sans-serif; cursor: pointer; transition: opacity .2s;
         }
         .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
         .btn-primary:hover:not(:disabled) { opacity: .88; }
 
-        /* Onglets */
         .tabs { display: flex; gap: .35rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
         .tab-btn {
           padding: .5rem 1rem; border-radius: 9px;
           background: transparent; border: 1px solid transparent;
-          color: #666680; font-size: .85rem; font-weight: 500;
-          cursor: pointer; font-family: 'DM Sans', sans-serif;
-          transition: all .18s;
+          color: var(--admin-muted); font-size: .85rem; font-weight: 500;
+          cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all .18s;
         }
-        .tab-btn:hover { color: #e8e8f0; background: rgba(255,255,255,.04); }
+        .tab-btn:hover {
+          color: var(--admin-text);
+          background: var(--admin-bg);
+          border-color: var(--admin-border);
+        }
         .tab-btn.active {
-          color: #6ee7b7; background: rgba(110,231,183,.08);
-          border-color: rgba(110,231,183,.15);
+          color: var(--admin-accent);
+          background: var(--admin-accent-l);
+          border-color: var(--admin-accent-m);
         }
 
-        /* Cards */
         .settings-body { display: flex; flex-direction: column; gap: 1.25rem; }
         .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
         .form-card {
-          background: rgba(255,255,255,.025);
-          border: 1px solid rgba(255,255,255,.06);
+          background: var(--admin-card);
+          border: 1px solid var(--admin-border);
           border-radius: 14px; padding: 1.75rem;
         }
         .section-title {
           font-family: 'Syne', sans-serif; font-weight: 700;
-          font-size: .95rem; color: #e8e8f0; margin-bottom: 1.5rem;
+          font-size: .95rem; color: var(--admin-text); margin-bottom: 1.5rem;
         }
 
-        /* Champs */
         .input {
-          background: rgba(255,255,255,.04);
-          border: 1px solid rgba(255,255,255,.08);
+          background: var(--admin-bg);
+          border: 1px solid var(--admin-border);
           border-radius: 9px; padding: .65rem .9rem;
-          color: #e8e8f0; font-family: 'DM Sans', sans-serif;
-          font-size: .875rem; outline: none; width: 100%;
-          transition: border-color .2s;
+          color: var(--admin-text); font-family: 'DM Sans', sans-serif;
+          font-size: .875rem; outline: none; width: 100%; transition: border-color .2s;
         }
-        .input:focus { border-color: rgba(110,231,183,.35); }
-        .input::placeholder { color: #333348; }
+        .input:focus { border-color: var(--admin-accent); }
+        .input::placeholder { color: var(--admin-muted); opacity: .6; }
         .textarea { resize: vertical; line-height: 1.6; }
-        .hint { font-size: .72rem; color: #444458; display: block; margin-top: .3rem; }
-        .hint-warn { color: #f87171; }
+        .hint { font-size: .72rem; color: var(--admin-muted); display: block; margin-top: .3rem; }
+        .hint-warn { color: #991B1B; }
 
-        /* Toggle */
         .toggle-field {
           display: flex; align-items: center;
           justify-content: space-between; gap: 1rem;
-          padding: 1rem 0; border-top: 1px solid rgba(255,255,255,.05);
-          margin-top: 1rem;
+          padding: 1rem 0; border-top: 1px solid var(--admin-border); margin-top: 1rem;
         }
-        .toggle-label { font-size: .875rem; font-weight: 600; color: #c8c8d8; }
-        .toggle-hint  { font-size: .75rem; color: #555568; margin-top: .15rem; }
+        .toggle-label { font-size: .875rem; font-weight: 600; color: var(--admin-text); }
+        .toggle-hint  { font-size: .75rem; color: var(--admin-muted); margin-top: .15rem; }
         .toggle { display: flex; cursor: pointer; }
         .toggle-input { display: none; }
         .toggle-track {
           width: 44px; height: 24px; border-radius: 99px;
-          background: rgba(255,255,255,.08);
-          border: 1px solid rgba(255,255,255,.1);
+          background: var(--admin-border-2);
+          border: 1px solid var(--admin-border);
           position: relative; transition: background .25s, border-color .25s;
         }
         .toggle-input:checked + .toggle-track {
-          background: rgba(110,231,183,.2);
-          border-color: rgba(110,231,183,.35);
+          background: var(--admin-accent);
+          border-color: var(--admin-accent);
         }
         .toggle-thumb {
           position: absolute; top: 2px; left: 2px;
           width: 18px; height: 18px; border-radius: 50%;
-          background: #888; transition: transform .25s, background .25s;
+          background: #fff; transition: transform .25s;
+          box-shadow: 0 1px 3px rgba(0,0,0,.15);
         }
         .toggle-input:checked + .toggle-track .toggle-thumb {
-          transform: translateX(20px); background: #6ee7b7;
+          transform: translateX(20px);
         }
 
-        /* Avatar */
         .avatar-preview {
           width: 80px; height: 80px; border-radius: 14px;
-          overflow: hidden; border: 1px solid rgba(255,255,255,.1);
-          margin-top: .75rem;
+          overflow: hidden; border: 1px solid var(--admin-border); margin-top: .75rem;
         }
         .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* SERP */
         .serp-preview {
-          background: #fff; border-radius: 10px;
-          padding: 1.25rem 1.5rem; margin-top: 1.5rem;
+          background: #fff; border: 1px solid #E5E3DC;
+          border-radius: 10px; padding: 1.25rem 1.5rem; margin-top: 1.5rem;
         }
         .serp-title { color: #1a0dab; font-size: 1.05rem; font-weight: 400; margin-bottom: .2rem; }
         .serp-url   { color: #006621; font-size: .8rem; margin-bottom: .3rem; }
@@ -327,20 +307,25 @@ export default function ParametresPage() {
         @media (max-width: 900px) {
           .settings-grid { grid-template-columns: 1fr; }
           .page-header { flex-direction: column; }
+          .header-actions { width: 100%; justify-content: flex-end; }
+        }
+
+        @media (max-width: 480px) {
+          .form-card { padding: 1.25rem; }
+          .btn-primary { width: 100%; text-align: center; }
         }
       `}</style>
     </>
   )
 }
 
-/* Composant champ réutilisable */
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: '1.1rem' }}>
       <label style={{
         display: 'block', fontSize: '.75rem',
         textTransform: 'uppercase', letterSpacing: '.06em',
-        color: '#666680', fontWeight: 600, marginBottom: '.45rem',
+        color: 'var(--admin-muted)', fontWeight: 600, marginBottom: '.45rem',
       }}>
         {label}
       </label>

@@ -3,10 +3,10 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const NAV = [
-  { href: '/admin', label: 'Dashboard', exact: true },
-  { href: '/admin/projets', label: 'Projets', exact: false },
-  { href: '/admin/messages', label: 'Messages', exact: false },
-  { href: '/admin/parametres', label: 'Paramètres', exact: false },
+  { href: '/admin', label: 'Dashboard', exact: true, icon: '▪' },
+  { href: '/admin/projets', label: 'Projets', exact: false, icon: '▪' },
+  { href: '/admin/messages', label: 'Messages', exact: false, icon: '▪' },
+  { href: '/admin/parametres', label: 'Paramètres', exact: false, icon: '▪' },
 ]
 
 export default function AdminSidebar() {
@@ -17,32 +17,46 @@ export default function AdminSidebar() {
 
   return (
     <aside style={{
-      width: 220, minHeight: '100vh',
-      background: '#0a0a12',
+      width: 220,
+      minHeight: '100vh',
+      background: 'var(--admin-sidebar)',
       borderRight: '1px solid rgba(255,255,255,.06)',
-      display: 'flex', flexDirection: 'column',
-      flexShrink: 0, position: 'sticky', top: 0, height: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      flexShrink: 0,
+      position: 'sticky',
+      top: 0,
+      height: '100vh',
     }}>
       {/* Logo */}
       <div style={{
         display: 'flex', alignItems: 'center',
-        padding: '1.25rem 1rem',
-        borderBottom: '1px solid rgba(255,255,255,.06)',
+        padding: '1.5rem 1.25rem',
+        borderBottom: '1px solid rgba(255,255,255,.07)',
       }}>
-        <Link href="/admin" style={{ display: 'flex', alignItems: 'center', gap: '.65rem', textDecoration: 'none' }}>
+        <Link href="/admin" style={{ display: 'flex', alignItems: 'center', gap: '.75rem', textDecoration: 'none' }}>
           <div style={{
-            width: 32, height: 32, background: '#6ee7b7', color: '#0a0a12',
-            borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontWeight: 800, fontSize: '.8rem', fontFamily: "'Syne', sans-serif", flexShrink: 0,
+            width: 34, height: 34,
+            background: 'var(--admin-accent)',
+            color: '#ffffff',
+            borderRadius: 9,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontWeight: 800, fontSize: '.8rem',
+            fontFamily: "'Syne', sans-serif",
+            flexShrink: 0,
           }}>CS</div>
-          <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '.9rem', color: '#e8e8f0' }}>
+          <span style={{
+            fontFamily: "'Syne', sans-serif",
+            fontWeight: 700, fontSize: '.95rem',
+            color: '#ffffff',
+          }}>
             Admin
           </span>
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav style={{ flex: 1, padding: '.75rem .6rem', display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <nav style={{ flex: 1, padding: '1rem .75rem', display: 'flex', flexDirection: 'column', gap: 3 }}>
         {NAV.map(item => {
           const active = isActive(item.href, item.exact)
           return (
@@ -51,12 +65,16 @@ export default function AdminSidebar() {
               href={item.href}
               style={{
                 display: 'flex', alignItems: 'center',
-                padding: '.6rem .75rem', borderRadius: 8,
+                padding: '.65rem .875rem',
+                borderRadius: 9,
                 textDecoration: 'none',
-                color: active ? '#6ee7b7' : '#8888a0',
-                background: active ? 'rgba(110,231,183,.1)' : 'transparent',
-                fontSize: '.875rem', fontWeight: 500,
+                color: active ? '#ffffff' : 'rgba(255,255,255,.45)',
+                background: active ? 'rgba(26,86,219,.35)' : 'transparent',
+                fontSize: '.875rem',
+                fontWeight: active ? 600 : 400,
                 transition: 'all .18s',
+                borderLeft: active ? '3px solid var(--admin-accent)' : '3px solid transparent',
+                letterSpacing: active ? '-.01em' : 'normal',
               }}
             >
               {item.label}
@@ -66,11 +84,14 @@ export default function AdminSidebar() {
       </nav>
 
       {/* Lien site public */}
-      <div style={{ padding: '.75rem .6rem', borderTop: '1px solid rgba(255,255,255,.06)' }}>
+      <div style={{ padding: '.75rem', borderTop: '1px solid rgba(255,255,255,.07)' }}>
         <Link href="/" target="_blank" style={{
-          display: 'flex', alignItems: 'center', gap: '.65rem',
-          padding: '.5rem .75rem', borderRadius: 8,
-          textDecoration: 'none', color: '#8888a0', fontSize: '.8rem',
+          display: 'flex', alignItems: 'center', gap: '.6rem',
+          padding: '.55rem .875rem', borderRadius: 9,
+          textDecoration: 'none',
+          color: 'rgba(255,255,255,.35)',
+          fontSize: '.8rem',
+          transition: 'color .18s',
         }}>
           ↗ Voir le site
         </Link>

@@ -16,8 +16,6 @@ export default async function AdminLayout({
 }) {
   const session = await getServerSession(authOptions)
 
-  // Pas de session → on rend quand même children
-  // Le middleware protège les routes, pas ce layout
   if (!session) {
     return <>{children}</>
   }
@@ -30,15 +28,45 @@ export default async function AdminLayout({
         href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap"
         rel="stylesheet"
       />
-      <div style={{
-        display: 'flex', minHeight: '100vh',
-        background: '#0d0d14', color: '#e8e8f0',
-        fontFamily: "'DM Sans', sans-serif",
-      }}>
+      <style>{`
+        .admin-shell {
+          --admin-bg:       #F7F7F5;
+          --admin-bg-2:     #EFEEEA;
+          --admin-sidebar:  #1C1C28;
+          --admin-topbar:   #ffffff;
+          --admin-card:     #ffffff;
+          --admin-border:   #E4E3DE;
+          --admin-border-2: #D5D3CC;
+          --admin-text:     #16161F;
+          --admin-muted:    #6B6A7A;
+          --admin-accent:   #1A56DB;
+          --admin-accent-l: #EBF0FD;
+          --admin-accent-m: #C7D4F9;
+          display: flex;
+          min-height: 100vh;
+          background: var(--admin-bg);
+          color: var(--admin-text);
+          font-family: 'DM Sans', sans-serif;
+        }
+        .admin-main-area {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
+          overflow: hidden;
+          background: var(--admin-bg);
+        }
+        .admin-content {
+          flex: 1;
+          padding: 2rem 2.5rem;
+          overflow-y: auto;
+        }
+      `}</style>
+      <div className="admin-shell">
         <AdminSidebar />
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+        <div className="admin-main-area">
           <AdminTopbar admin={session.user} />
-          <main style={{ flex: 1, padding: '2rem 2.5rem', overflowY: 'auto' }}>
+          <main className="admin-content">
             {children}
           </main>
         </div>

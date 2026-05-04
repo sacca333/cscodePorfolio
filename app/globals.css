@@ -2,26 +2,28 @@
    app/globals.css – Styles globaux du portfolio
    ========================================================== */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 :root {
-  --bg:          #0a0a0f;
-  --bg-2:        #111118;
-  --bg-3:        #16161f;
-  --accent:      #6ee7b7;
-  --accent-blue: #3b82f6;
-  --accent-amber:#f59e0b;
-  --text:        #f1f0ec;
-  --muted:       #8b8b99;
-  --border:      rgba(255,255,255,0.07);
-  --border-2:    rgba(255,255,255,0.12);
-  --card:        rgba(255,255,255,0.03);
+  --bg: #FAFAF8;
+  --bg-2: #F4F3EE;
+  --bg-3: #ECEAE2;
+  --accent: #4361EE;
+  --accent-blue: #1D4ED8;
+  --accent-amber: #D97706;
+  --text: #1a1a2e;
+  --muted: #6B6A80;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-2: rgba(0, 0, 0, 0.14);
+  --card: rgba(67, 97, 238, 0.04);
   --font-display: 'Syne', sans-serif;
-  --font-body:    'DM Sans', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
@@ -29,30 +31,69 @@
   --radius-full: 9999px;
 }
 
-html { scroll-behavior: smooth; font-size: 16px; }
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-body);
-  line-height: 1.7;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
+  /* reste identique */
 }
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 99px; }
-::selection { background: rgba(110,231,183,0.2); color: var(--text); }
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 99px;
+}
+
+::selection {
+  background: rgba(67, 97, 238, 0.15);
+  color: var(--text);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 99px;
+}
+
+::selection {
+  background: rgba(110, 231, 183, 0.2);
+  color: var(--text);
+}
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.35; transform: scale(0.85); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Reset spécifique page login */
@@ -62,4 +103,17 @@ body {
   align-items: center;
   justify-content: center;
   background: #0a0a0f;
+}
+
+/* PublicNav responsive */
+@media (max-width: 768px) {
+
+  nav ul,
+  nav>a:last-child {
+    display: none !important;
+  }
+
+  nav {
+    padding: .875rem 1.5rem !important;
+  }
 }
