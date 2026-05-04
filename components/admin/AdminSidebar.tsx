@@ -18,7 +18,8 @@ export default function AdminSidebar() {
   return (
     <aside style={{
       width: 220,
-      minHeight: '100vh',
+      minHeight: 'auto',
+      height: '100vh',
       background: 'var(--admin-sidebar)',
       borderRight: '1px solid rgba(255,255,255,.06)',
       display: 'flex',
@@ -26,7 +27,8 @@ export default function AdminSidebar() {
       flexShrink: 0,
       position: 'sticky',
       top: 0,
-      height: '100vh',
+      overflowY: 'auto',
+      overflowX: 'hidden',
     }}>
       {/* Logo */}
       <div style={{
