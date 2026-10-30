@@ -1,0 +1,57 @@
+{
+    "meta": {
+        "title": "Charles Sacca – Développeur web full-stack",
+        "description": "Développeur web full-stack basé au Bénin. Applications React, Next.js et Node.js pour des clients aux États-Unis, en Europe et en Afrique."
+    },
+    "nav": {
+        "about": "À propos",
+        "skills": "Compétences",
+        "projects": "Projets",
+        "experience": "Expérience",
+        "contact": "Contact",
+        "menu": "Menu"
+    },
+    "theme": {
+        "toLight": "Passer au thème clair",
+        "toDark": "Passer au thème sombre"
+    },
+    "hero": {
+        "available": "Disponible pour des missions freelance",
+        "role": "Développeur web full-stack",
+        "tagline": "Je conçois des applications web rapides et fiables avec React, Next.js et Node.js, de la base de données à l'interface.",
+        "seeProjects": "Voir mes projets",
+        "contact": "Me contacter",
+        "cv": "Télécharger le CV",
+        "localTime": "Heure locale à Cotonou",
+        "years": "{count, plural, one {# an d'expérience} other {# ans d'expérience}}"
+    },
+    "about": {
+        "title": "Basé au Bénin, en télétravail",
+        "p1": "Je conçois et livre des produits web complets : modèle de données, API, interface et déploiement.",
+        "p2": "Je travaille depuis Cotonou avec des clients aux États-Unis, en Europe et en Afrique, en freelance ou en collaboration longue durée.",
+        "location": "Cotonou, Bénin",
+        "remote": "À distance, horaires compatibles avec les États-Unis",
+        "languages": "Anglais, français"
+    },
+    "skills": {
+        "title": "Compétences"
+    },
+    "projects": {
+        "title": "Projets choisis",
+        "demo": "Voir la démo",
+        "code": "Code source"
+    },
+    "experience": {
+        "title": "Expérience",
+        "present": "Présent",
+        "current": "Poste actuel"
+    },
+    "contact": {
+        "title": "Travaillons ensemble",
+        "text": "Ouvert aux projets freelance, aux collaborations et aux postes à temps plein. Je réponds sous 24 h."
+    },
+    "footer": {
+        "rights": "Tous droits réservés",
+        "admin": "Admin"
+    }
+}

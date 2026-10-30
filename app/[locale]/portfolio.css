@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --pf-bg: #f2f5f4;
+    --pf-card: #ffffff;
+    --pf-ink: #10201a;
+    --pf-muted: #4f615a;
+    --pf-line: #d5deda;
+    --pf-accent: #0b7a4b;
+    --pf-accent-ink: #ffffff;
+}
+
+.dark {
+    --pf-bg: #0c1411;
+    --pf-card: #121d18;
+    --pf-ink: #eaf2ee;
+    --pf-muted: #9bb0a7;
+    --pf-line: #23342c;
+    --pf-accent: #f2c230;
+    --pf-accent-ink: #10201a;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+}
+
+body {
+    background: var(--pf-bg);
+    color: var(--pf-ink);
+}
+
+:focus-visible {
+    outline: 2px solid var(--pf-accent);
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}

@@ -234,3 +234,26 @@ body {
   background: #FDE68A;
 }
 
+.hero-stats {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 1rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--border);
+  width: 100%;
+  margin-right: calc(-1 * clamp(0px, 26vw, 380px));
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem 1.5rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  flex: 1;
+  min-width: 0;
+}

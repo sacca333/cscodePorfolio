@@ -1,0 +1,57 @@
+{
+    "meta": {
+        "title": "Charles Sacca – Full-stack web developer",
+        "description": "Full-stack web developer based in Benin. React, Next.js and Node.js applications for clients in the US, Europe and Africa."
+    },
+    "nav": {
+        "about": "About",
+        "skills": "Skills",
+        "projects": "Projects",
+        "experience": "Experience",
+        "contact": "Contact",
+        "menu": "Menu"
+    },
+    "theme": {
+        "toLight": "Switch to light theme",
+        "toDark": "Switch to dark theme"
+    },
+    "hero": {
+        "available": "Available for freelance work",
+        "role": "Full-stack web developer",
+        "tagline": "I build fast, reliable web applications with React, Next.js and Node.js, from database to interface.",
+        "seeProjects": "See my projects",
+        "contact": "Get in touch",
+        "cv": "Download CV",
+        "localTime": "Local time in Cotonou",
+        "years": "{count, plural, one {# year of experience} other {# years of experience}}"
+    },
+    "about": {
+        "title": "Based in Benin, working remotely",
+        "p1": "I design and ship complete web products: data model, API, interface and deployment.",
+        "p2": "I work from Cotonou with clients in the US, Europe and Africa, on freelance missions or long-term collaborations.",
+        "location": "Cotonou, Benin",
+        "remote": "Remote, flexible overlap with US hours",
+        "languages": "English, French"
+    },
+    "skills": {
+        "title": "Skills"
+    },
+    "projects": {
+        "title": "Selected projects",
+        "demo": "Live demo",
+        "code": "Source code"
+    },
+    "experience": {
+        "title": "Experience",
+        "present": "Present",
+        "current": "Current role"
+    },
+    "contact": {
+        "title": "Let's work together",
+        "text": "Open to freelance projects, collaborations and full-time roles. I reply within 24 hours."
+    },
+    "footer": {
+        "rights": "All rights reserved",
+        "admin": "Admin"
+    }
+}
